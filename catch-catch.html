@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Catch Catch — 두 그림 사이의 차이</title>
+<meta name="description" content="두 장의 그림과 그 사이에 숨은 차이. 테마 팩 19개, 장면 95개. 무료, 인앱 결제 없음.">
+
+<meta property="og:title" content="Catch Catch">
+<meta property="og:description" content="두 장의 그림, 그 사이에 숨은 차이. 재촉하는 시계는 없습니다.">
+<meta property="og:image" content="https://TODO.example/assets/og/catch-catch.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+
+<!-- data-app is what tells site.js which entry in data.js this page is. Copy
+     this file per game, change that one attribute and the four meta tags. -->
+<body data-app="catch-catch">
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="./">ENERGY<span>POTION</span></a>
+    <nav>
+      <a href="./#games" data-ui="allGames">All games</a>
+      <span data-lang></span>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 1 — the hero. One screen, one job: say what it is and give the button.
+          Nothing between the headline and the store link. -->
+  <div class="hero">
+    <div class="eyebrow" data-app-tag></div>
+    <h1 data-app-name></h1>
+    <p class="lead" data-app-line></p>
+    <div class="stores" data-app-stores></div>
+
+    <!-- 2 — the proof, immediately under the button. A muted, looping,
+            autoplaying clip of ~8 seconds of real play. This is the single
+            highest-value asset on the page: a community reader decides from
+            the motion, not from the sentence. Keep it under 2 MB. -->
+    <div class="media">
+      <!--
+      <video src="assets/shots/catch-catch.mp4" poster="assets/shots/catch-catch.jpg"
+             autoplay muted loop playsinline></video>
+      -->
+      <div class="placeholder">
+        TODO — assets/shots/catch-catch.mp4<br>
+        8 s of real play, muted, looping<br>
+        portrait, ≤ 2 MB
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 — the rule, in three lines. Not features: the thing that makes the
+          board interesting. This is what gets quoted in a community thread. -->
+  <section>
+    <h2 data-ui="howItWorks">How it works</h2>
+    <ul class="points" data-app-points></ul>
+  </section>
+
+  <!-- 4 — screens. Horizontal scroll on a phone, no lightbox, no carousel JS. -->
+  <section>
+    <h2 data-ui="shots">Screens</h2>
+    <div class="shots" data-app-shots></div>
+  </section>
+
+  <!-- 5 — the questions a community reader actually asks before installing,
+          answered before they have to ask. Refusing to hide the ad model here
+          is worth more than it costs. -->
+  <section>
+    <h2 data-ui="facts">The details</h2>
+    <!-- Rows come from data.js. The two that are true of every game — free,
+         and the ad length — are added by the renderer so they read the same on
+         all six pages. -->
+    <table class="facts" data-app-facts></table>
+  </section>
+
+  <!-- 6 — OPTIONAL and worth more than it looks in KR/JP communities: a short
+          "how it was made" note, in the developer's own voice, linked out to
+          the post you are advertising from. A page that is only an ad reads as
+          an ad; a page attached to a dev log reads as a person. -->
+  <!-- Unhide once the note is written. Both critics called an
+       unwritten section worse than an absent one, and this would have
+       shipped with the word TODO on it. -->
+  <section hidden>
+    <h2>개발 노트</h2>
+    <p style="color:var(--ink-dim);max-width:60ch;margin:0">
+      TODO — two or three sentences, first person, plus a link to the fuller
+      post. What made this one worth making, in the developer's own voice.
+    </p>
+  </section>
+
+  <!-- 7 — the button again, at the bottom, for the reader who scrolled. -->
+  <section style="text-align:center">
+    <div class="stores" data-app-stores-foot></div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© Energy Potion</span>
+    <a href="./#games" data-ui="allGames">All games</a>
+    <a href="#" data-privacy data-ui="privacy">Privacy</a>
+    <a href="#" data-support data-ui="support">Support</a>
+  </div>
+</footer>
+
+<!-- the bar that appears once the hero's buttons have scrolled off -->
+<div class="sticky" data-sticky>
+  <div class="wrap"><div class="stores" data-app-stores-foot></div></div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Energy Potion — six small games, free</title>
+<meta name="description" content="Six small mobile games for iOS and Android. Two puzzles, an endless fall, and three arcade games. Free.">
+
+<!-- In a community feed the card is what people see before they see the page.
+     1200x630, the best-looking game's own screen. TODO: real URL + image. -->
+<meta property="og:title" content="무료 게임 6개 — 인앱 결제 없음">
+<meta property="og:description" content="틀린 그림 찾기, 턴제 퍼즐, 영역 확보, 낙하, 슈팅 둘. 광고는 힌트나 이어하기를 직접 누를 때만.">
+<meta property="og:image" content="https://TODO.example/assets/og/studio.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+
+<!-- THIS is the page an ad link arrives at. Every block below carries its own
+     store buttons, because a reader who scrolled to the fourth game will not
+     scroll back up to a single button at the top. -->
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="./">ENERGY<span>POTION</span></a>
+    <nav><span data-lang></span></nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero hero-studio">
+    <div class="eyebrow">ENERGY POTION</div>
+    <h1 data-studio-head></h1>
+    <p class="lead" data-studio-line></p>
+    <div class="badges">
+      <span>iOS · Android</span><span>Free</span><span>EN / 한국어 / 日本語</span>
+    </div>
+
+    <!-- One screen, in the first screenful. Filled by the renderer with the
+         first featured game that actually has a screenshot on disk, so it can
+         never render as a broken frame while the shots are still coming in. -->
+    <div class="hero-shot" data-hero-shot></div>
+  </div>
+
+  <!-- The list at a glance, before the reader commits to scrolling six blocks.
+       Two columns, three rows — not one wrapping row, which broke 5 + 1 and
+       read as a leftover. Each entry names the genre, not the sentence the
+       block below will say, so it summarises rather than repeats. -->
+  <nav class="summary" data-summary aria-label="Games"></nav>
+
+  <!-- the six blocks -->
+  <div data-catalogue></div>
+
+  <!-- The small row of everything not featured was here — Dig and Find and
+       Space Sweeper. Taken out for now: the page is an ad, and a second list
+       under the six is a second thing to decide about. Put the section back
+       and it fills itself; `renderCatalogue()` already hides it when nothing
+       is unfeatured.
+
+  <section class="foot-list">
+    <h2 data-ui="alsoBy">Also by us</h2>
+    <div class="grid" data-rest></div>
+  </section>
+  -->
+
+  <!-- The last thing on the page answers the question a reader leaves with,
+       rather than ending on legal links. Every claim here is checked: no
+       purchase code in any of the six, rewarded ads only, no tracker on this
+       page. -->
+  <section class="closing">
+    <h2 data-ui="whyFree">Why free</h2>
+    <p data-ui="whyFreeBody"></p>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© Energy Potion</span>
+    <a href="#" data-privacy data-ui="privacy">Privacy</a>
+    <a href="#" data-support data-ui="support">Support</a>
+    <a href="mailto:humor.essence@gmail.com">humor.essence@gmail.com</a>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
