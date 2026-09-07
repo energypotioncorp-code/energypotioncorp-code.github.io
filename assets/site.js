@@ -34,14 +34,14 @@ const UI = {
   whyFreeBody: {
     en: 'One person makes these. There is no purchase to sell you, so the only '
       + 'money here is a rewarded video — and it plays when you press it, never '
-      + 'on its own. This page carries no tracker either; a link with ?ref= '
+      + 'on its own. This page carries no tracker either; a link with ?c= '
       + 'tells us which community it came from, and nothing else.',
     ko: '혼자 만듭니다. 팔 물건이 없으니 수익은 보상형 광고 하나뿐이고, 그것도 '
       + '직접 눌러야 나옵니다. 이 페이지에는 추적기도 없습니다 — 링크에 붙은 '
-      + '?ref= 가 어느 커뮤니티에서 왔는지 알려줄 뿐입니다.',
+      + '?c= 가 어느 커뮤니티에서 왔는지 알려줄 뿐입니다.',
     ja: 'ひとりで作っています。売るものがないので収益は報酬型広告だけで、それも'
       + '自分で押したときにだけ流れます。このページに計測タグはありません。'
-      + 'リンクの ?ref= がどのコミュニティ由来かを伝えるだけです。',
+      + 'リンクの ?c= がどのコミュニティ由来かを伝えるだけです。',
   },
   howItWorks:{en: 'How it works', ko: '어떤 게임인가', ja: 'どんなゲームか' },
   shots:    { en: 'Screens',    ko: '화면',       ja: '画面' },
@@ -76,7 +76,11 @@ const ui  = (key) => t(UI[key]);
 
 /* --- where the click came from ------------------------------------------ */
 
-const REF = new URLSearchParams(location.search).get('ref') || '';
+// `c`, the same parameter the studio's existing smart links use
+// (…github.io/iz/?c=tiktok). One name across every link is what makes the
+// numbers add up in one place; `ref` is still read so an older link works.
+const params = new URLSearchParams(location.search);
+const REF = params.get('c') || params.get('ref') || '';
 
 function storeUrl(app, platform) {
   const raw = platform === 'ios' ? app.ios : app.android;
@@ -158,7 +162,7 @@ function renderBlock(app) {
         <p>${t(app.line)}</p>
         ${points ? `<ul class="mini">${points}</ul>` : ''}
         <div class="stores">${storeButtons(app)}</div>
-        <a class="more" href="${app.slug}.html${REF ? '?ref=' + encodeURIComponent(REF) : ''}">${ui('more')} &rarr;</a>
+        <a class="more" href="${app.slug}.html${REF ? '?c=' + encodeURIComponent(REF) : ''}">${ui('more')} &rarr;</a>
       </div>
     </article>`;
 }
@@ -237,7 +241,7 @@ function renderCatalogue(el) {
 
 function renderGrid(el, list) {
   el.innerHTML = (list || APPS).map((app) => `
-    <a class="card" href="${app.slug}.html${REF ? '?ref=' + encodeURIComponent(REF) : ''}"
+    <a class="card" href="${app.slug}.html${REF ? '?c=' + encodeURIComponent(REF) : ''}"
        style="--accent:${app.accent}">
       ${iconOf(app, 'shot')}
       <span class="card-text">
