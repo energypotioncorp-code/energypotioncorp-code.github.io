@@ -10,16 +10,32 @@
      1200x630, the best-looking game's own screen. Built by tools/make_og.py
      out of data.js and the screenshots, so a card cannot drift from its page. -->
 <meta property="og:title" content="무료 게임 6개 — 인앱 결제 없음">
-<meta property="og:description" content="틀린 그림 찾기, 턴제 퍼즐, 영역 확보, 낙하, 슈팅 둘. 광고는 힌트나 이어하기를 직접 누를 때만.">
+<meta property="og:description" content="틀린 그림 찾기, 턴제 퍼즐, 영역 확보, 낙하, 슈팅 둘. 광고는 보상형뿐, 배너도 거절할 수 없는 광고도 없습니다.">
 <meta property="og:image" content="https://energypotioncorp-code.github.io/assets/og/studio.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://energypotioncorp-code.github.io/">
 <meta name="twitter:card" content="summary_large_image">
 
+<!-- Runs before anything else on the page: the language has to be known before the
+     first paint, and the picture at the top should start downloading now rather than
+     after the stylesheet. Order matches ECHO_LANG > es.lang > handset in the game. -->
+<script>
+(function(){var L=['en','ko','ja'],p=new URLSearchParams(location.search).get('lang'),s=null,n=(navigator.language||'en').slice(0,2),l;
+try{s=localStorage.getItem('ep.lang')}catch(e){}
+l=L.indexOf(p)>=0?p:L.indexOf(s)>=0?s:L.indexOf(n)>=0?n:'en';
+document.documentElement.lang=l;window.EP_LANG=l;window.EP_HERO='assets/shots/catch-catch-'+l+'-1.jpg';
+var k=document.createElement('link');k.rel='preload';k.as='image';k.href=window.EP_HERO;k.fetchPriority='high';document.head.appendChild(k);})();
+</script>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<!-- Not render-blocking: a font on another host must never hold up the first paint. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="assets/site.css">
+<script defer src="assets/data.js"></script>
+<script defer src="assets/shots.js"></script>
+<script defer src="assets/site.js"></script>
 </head>
 
 <!-- THIS is the page an ad link arrives at. Every block below carries its own
@@ -38,16 +54,32 @@
 
   <div class="hero hero-studio">
     <div class="eyebrow">ENERGY POTION</div>
-    <h1 data-studio-head></h1>
-    <p class="lead" data-studio-line></p>
+    <!-- The hero's words are written here, all three languages, not in data.js: they
+         have to be on screen from the first response. CSS shows the reader's language
+         (html[lang] is set in the head). tools/make_og.py reads the card's text from here.
+
+         Careful with the second line. It said ads play only when you press them, and
+         Space Fighter's stage-clear ad starts by itself after a countdown. What is true
+         of all six: rewarded only, no banners, and you can always decline. -->
+    <h1>
+      <span data-l="ko">무료 다운로드.<br>인앱 결제 0원.</span>
+      <span data-l="en">Free to download.<br>No in-app purchases.</span>
+      <span data-l="ja">無料ダウンロード。<br>アプリ内課金 0 円。</span>
+    </h1>
+    <p class="lead">
+      <span data-l="ko">광고는 보상형뿐입니다. 배너도, 거절할 수 없는 광고도 없습니다.</span>
+      <span data-l="en">Rewarded ads only: no banners, and none you cannot say no to.</span>
+      <span data-l="ja">広告は報酬型だけ。バナーも、断れない広告もありません。</span>
+    </p>
     <div class="badges">
-      <span>iOS · Android</span><span>Free</span><span>EN / 한국어 / 日本語</span>
+      <span>iOS · Android</span>
+      <span data-l="ko">게임 6개</span><span data-l="en">6 games</span><span data-l="ja">ゲーム6本</span>
     </div>
 
-    <!-- One screen, in the first screenful. Filled by the renderer with the
-         first featured game that actually has a screenshot on disk, so it can
-         never render as a broken frame while the shots are still coming in. -->
-    <div class="hero-shot" data-hero-shot></div>
+    <div class="hero-shot wide">
+      <img id="hero-shot" data-slug="catch-catch" width="1200" height="793" alt="Catch Catch" fetchpriority="high" decoding="async">
+      <script>document.getElementById('hero-shot').src=window.EP_HERO</script>
+    </div>
   </div>
 
   <!-- The list at a glance, before the reader commits to scrolling six blocks.
@@ -71,15 +103,6 @@
   </section>
   -->
 
-  <!-- The last thing on the page answers the question a reader leaves with,
-       rather than ending on legal links. Every claim here is checked: no
-       purchase code in any of the six, rewarded ads only, no tracker on this
-       page. -->
-  <section class="closing">
-    <h2 data-ui="whyFree">Why free</h2>
-    <p data-ui="whyFreeBody"></p>
-  </section>
-
 </div>
 
 <footer>
@@ -91,7 +114,5 @@
   </div>
 </footer>
 
-<script src="assets/data.js"></script>
-<script src="assets/site.js"></script>
 </body>
 </html>

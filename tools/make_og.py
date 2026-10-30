@@ -23,10 +23,17 @@ FONTS  = pathlib.Path('/Volumes/ROG-ESD-S1C/Projects/ProjectV/Resources/fonts')
 BG, INK, DIM = (17, 20, 23), (240, 243, 244), (153, 162, 168)
 W, H = 1200, 630
 
+def first_shot(slug):
+    # Catch Catch's first is landscape and would be cropped; its second is the same
+    # screen, standing up.
+    if slug == 'catch-catch':
+        return SHOTS / 'catch-catch-ko-2.jpg'
+    return next(p for p in (SHOTS / f'{slug}-{l}-1.jpg' for l in ('ko', 'en')) if p.exists())
+
 def apps():
     """Read data.js by asking node for it — one source of truth, no re-typing."""
     js = (ROOT / 'assets/data.js').read_text()
-    out = subprocess.run(['node', '-e', js + '\nconsole.log(JSON.stringify({STUDIO, APPS}))'],
+    out = subprocess.run(['node', '-e', js + '\nconsole.log(JSON.stringify({APPS}))'],
                          capture_output=True, text=True, check=True)
     return json.loads(out.stdout)
 
@@ -85,15 +92,12 @@ def card(path, title, subtitle, shot=None, accent='#cfd6da'):
 
 def main():
     data = apps()
-    hero = next((a for a in data['APPS']
-                 if a.get('feature') and (SHOTS / (a['slug'] + '-1.jpg')).exists()), None)
-    card(OUT / 'studio.png',
-         data['STUDIO']['head']['ko'].replace('\n', ' '),
-         data['STUDIO']['line']['ko'],
-         SHOTS / (hero['slug'] + '-1.jpg') if hero else None)
+    html = (ROOT / 'index.html').read_text()
+    head, line = re.findall(r'<span data-l="ko">(.*?)</span>', html)[:2]
+    card(OUT / 'studio.png', head.replace('<br>', ' '), line, SHOTS / 'catch-catch-ko-2.jpg')
     for a in data['APPS']:
         if not a.get('feature'): continue
         card(OUT / (a['slug'] + '.png'), a['name'], a['line']['ko'],
-             SHOTS / (a['slug'] + '-1.jpg'), a['accent'])
+             first_shot(a['slug']), a['accent'])
 
 main()

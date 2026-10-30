@@ -10,169 +10,149 @@
    first block and maybe the second. The strongest game goes first, not the
    newest and not the oldest.
 
-   `feature: true` puts a game in the full-width blocks. Everything else drops
-   to the small row at the foot. Six blocks is about the limit before the page
-   stops being read and starts being scrolled past.
+   `feature: true` puts a game in the full-width blocks. Six is about the limit
+   before the page stops being read and starts being scrolled past.
    The rule is the same one LevelData.cpp lives under: two hand-maintained
    copies is one copy that goes stale.
 
-   The store links below were verified rather than guessed, on 2026-09-06:
-   every Play URL was fetched (a listing that is not there answers 404 — Catch
-   Catch and Space Sweeper do), and every App Store id came from Apple's own
-   lookup by bundle id. Re-check the same way after a release; a dead link on a
-   page you paid to advertise is the one failure that costs money per click.
+   Store links are verified, not guessed: a Play listing that is not there answers
+   404, and App Store ids come from Apple's lookup. Re-check after a release (last
+   2026-10-30); a dead link on a page you paid to advertise costs money per click.
+
+   What a game says about itself comes from its store listing and its own code.
+   Three sentences written here from memory turned out to be false — no clock in
+   Catch Catch, a formation shooter in Invader Z, fire-while-held in Space Fighter.
 --------------------------------------------------------------------------- */
 
 const STUDIO = {
   name: 'Energy Potion',
-  // The hero. Gemini was asked for candidates and this is its fifth, kept
-  // because its reasoning was the right one for where these links are going:
-  // what a community reader is most suspicious of is the *condition* attached
-  // to "free". Answering that before they ask is worth more than a slogan.
-  //
-  // Both claims were checked against the code rather than assumed, and they
-  // have to be re-checked if that changes:
-  //   no in-app purchases — StoreKit is imported in two projects and never
-  //   used; there is no SKPaymentQueue call and no BillingClient anywhere.
-  //   there ARE ads, and every one of them is rewarded — the six link the
-  //   Google Mobile Ads SDK and call showRewarded() and nothing else. No
-  //   GADBannerView, no unprompted interstitial, in any of the six.
-  // Saying so on the page is the point. One of Gemini's other candidates
-  // offered '광고 없이 무료로', which is simply false here, and false in the one
-  // place a community reader will check first.
-  //
-  // What this replaced: 'Small games, made whole. Eight of them, on two
-  // stores.' — written to fill the space. It counted eight while the page
-  // shows six, and a number in the copy is a promise that has to hold on the
-  // day the link is shared; 'made whole' was the studio praising itself.
-  head: {
-    en: 'Free to download.\nNo in-app purchases.',
-    ko: '무료 다운로드.\n인앱 결제 0원.',
-    ja: '無料ダウンロード。\nアプリ内課金 0 円。',
-  },
-  line: {
-    en: 'Ads play when you ask for a hint or a continue — never on their own.',
-    ko: '광고는 힌트나 이어하기가 필요할 때, 직접 누를 때만 나옵니다.',
-    ja: '広告はヒントやコンティニューを自分で押したときだけ流れます。',
-  },
+  // The hero's own sentences are not here: they live in index.html, so the top of
+  // the page can paint from the first response without waiting for this file.
   mail: 'humor.essence@gmail.com',
   privacy: 'https://energypotion-legal.web.app/privacy',
   support: 'https://energypotion-legal.web.app/support',
 };
 
-/* Each app:
-   slug     the page filename and the ad link's last segment  → /echo-step
-   accent   the app's own colour, taken from its own palette
-   tag      what it is, in three or four words (shown under the name)
-   line     one sentence. What the player does, not how it feels.
-   points   three bullets — only on the app's own page
-   facts    the spec table on the app's own page
-   ios/android  store URLs. null = button renders disabled, not broken.        */
-
 const APPS = [
   {
-    // The one the page is waiting for: nothing is shared until this block's
-    // buttons are live.
+    // The one the page is waiting for: nothing is shared until this is live.
+    // App Store Connect id 6804225701, so ios becomes
+    // 'https://apps.apple.com/app/id6804225701' the day it is approved.
+    // Play has nothing uploaded yet.
     slug: 'catch-catch', id: 'cc', name: 'Catch Catch', accent: '#ffd45c',
     ready: true, feature: true,
     tag:  { en: 'Spot the difference', ko: '틀린 그림 찾기', ja: '間違い探し' },
     line: {
-      en: 'Two pictures, a handful of differences, and no clock breathing down your neck.',
-      ko: '두 장의 그림, 그 사이에 숨은 차이. 재촉하는 시계는 없습니다.',
-      ja: '2 枚の絵と、その間に隠れた違い。急かす時計はありません。',
+      en: 'The two pictures should be the same. Look again: there is a bear in the bush.',
+      ko: '분명 똑같은 그림이었는데, 다시 보니 덤불 뒤에 곰이 숨어 있습니다.',
+      ja: '同じ絵のはずが、よく見るとしげみの陰にクマがいます。',
     },
     points: [
-      { en: '19 themed packs — a post office, an onsen, a night market, a space station.',
-        ko: '테마 팩 19개 — 우체국, 온천, 야시장, 우주정거장.',
-        ja: 'テーマパック 19 種 — 郵便局、温泉、夜市、宇宙ステーション。' },
-      { en: '95 scenes, every one drawn for this game.',
-        ko: '장면 95개, 전부 이 게임을 위해 그린 그림입니다.',
-        ja: '95 シーン、すべてこのゲームのために描いたもの。' },
-      { en: 'Pack names in Korean, English and Japanese.',
-        ko: '팩 이름은 한국어·영어·일본어로.',
-        ja: 'パック名は韓国語・英語・日本語で。' },
+      { en: '25 theme packs, 125 pictures, five differences in each. Find them before time runs out.',
+        ko: '테마 팩 25개, 그림 125장, 그림마다 차이 5개. 시간이 끝나기 전에 찾으세요.',
+        ja: 'テーマパック25種、絵125枚、1枚に違いが5つ。時間切れの前に見つけましょう。' },
+      { en: 'Stuck? The pencil finds one, the magnifier marks two, the clock adds ten seconds.',
+        ko: '막히면 연필이 하나를 찾아 주고, 돋보기가 둘을 표시하고, 시계가 10초를 더해 줍니다.',
+        ja: '困ったら、えんぴつが1つ見つけ、虫めがねが2つ示し、時計が10秒足してくれます。' },
+      { en: 'No account, no login. Open it and start, then try for this month\'s leaderboard.',
+        ko: '가입도 로그인도 없습니다. 켜면 바로 시작하고, 이번 달 랭킹에 이름을 올려 보세요.',
+        ja: '登録もログインも不要。開いてすぐ始められ、今月のランキングも狙えます。' },
     ],
     facts: [
       { k: { en: 'Content', ko: '분량', ja: 'ボリューム' },
-        v: { en: '19 packs, 95 scenes', ko: '19개 팩, 95개 장면', ja: '19 パック・95 シーン' } },
+        v: { en: '25 packs, 125 pictures', ko: '25개 팩, 그림 125장', ja: '25パック・絵125枚' } },
+      { k: { en: 'A round', ko: '한 판', ja: '1プレイ' },
+        v: { en: 'Up to five pictures on one timer of 60 seconds at most',
+             ko: '그림 최대 5장, 타이머 하나로 최대 60초',
+             ja: '絵は最大5枚、タイマーは共通で最大60秒' } },
+      { k: { en: 'Hearts', ko: '하트', ja: 'ハート' },
+        v: { en: 'One per round. You start with three, and they refill every eight hours.',
+             ko: '한 판에 하나. 세 개로 시작하고 8시간마다 다시 찹니다.',
+             ja: '1プレイに1つ。3つから始まり、8時間ごとに補充されます。' } },
       { k: { en: 'Ads', ko: '광고', ja: '広告' },
-        v: { en: 'Rewarded only, to refill hearts. You press it or you never see one.',
-             ko: '하트를 채울 때만 나오는 보상형. 누르지 않으면 한 번도 보지 않습니다.',
-             ja: 'ハート補充のときだけの報酬型。押さなければ一度も出ません。' } },
+        v: { en: 'Rewarded only, for an extra heart or item. It asks first, and no is fine.',
+             ko: '하트나 아이템을 더 받을 때만 나오는 보상형. 먼저 물어보고, 거절해도 됩니다.',
+             ja: 'ハートやアイテムを追加でもらうときだけの報酬型。先に確認があり、断れます。' } },
+      { k: { en: 'Network', ko: '인터넷', ja: 'ネット' },
+        v: { en: 'For the leaderboard and ads. The puzzles work without it.',
+             ko: '랭킹과 광고에만 필요합니다. 퍼즐은 없어도 됩니다.',
+             ja: 'ランキングと広告にだけ必要です。パズルはなくても遊べます。' } },
+      { k: { en: 'Languages', ko: '언어', ja: '言語' },
+        v: { en: 'English / 한국어 / 日本語', ko: '한국어 / English / 日本語', ja: '日本語 / English / 한국어' } },
     ],
-    android: null, ios: null,   // TODO — 출시 후 콘솔에서
+    android: null, ios: null,
   },
   {
     slug: 'echo-step', id: 'es', name: 'Echo Step', accent: '#7ad0aa',
     ready: true, feature: true,
     tag:  { en: 'Turn-based puzzle', ko: '턴제 퍼즐', ja: 'ターン制パズル' },
     line: {
-      en: 'Ground that holds you once. Cross it, and bring your echo with you.',
-      ko: '한 번만 버티는 발판. 그 위를 건너면서, 나를 따라오는 그림자까지 데려가야 합니다.',
-      ja: '一度しか耐えない足場。渡りきり、あなたを追う影も連れていく。',
+      en: 'A path you cannot turn back on. Find the exit with an echo that copies your every move.',
+      ko: '뒤돌아설 수 없는 길. 나를 흉내 내는 에코와 함께 출구를 찾으세요.',
+      ja: '引き返せない道。あなたをまねる「エコー」と一緒に出口を探します。',
     },
     points: [
-      { en: 'Every tile you leave crumbles behind you.',
-        ko: '지나온 자리는 무너집니다.',
-        ja: '通った足場は崩れ落ちます。' },
-      { en: 'Your echo copies each move — and can be stranded where it cannot follow.',
-        ko: '그림자는 내 움직임을 따라합니다. 따라올 수 없는 곳에 가둘 수도 있습니다.',
-        ja: '影はあなたの動きを真似ます。追えない場所に取り残すこともできます。' },
+      { en: 'White falls the moment you leave it, gold holds, and leaving one red takes the whole seam.',
+        ko: '화이트는 지나치면 무너지고, 골드는 안전하고, 레드는 하나를 떠나면 전부 무너집니다.',
+        ja: '白は離れた瞬間に崩れ、金は安全で、赤は1つ離れると全部崩れます。' },
+      { en: 'The echo wears the path away with you. Trap it, or use it.',
+        ko: '에코는 함께 움직이며 길을 지웁니다. 가둘 수도, 이용할 수도 있습니다.',
+        ja: 'エコーも一緒に動いて道を消します。閉じ込めることも、利用することもできます。' },
       { en: 'All four characters walk the same 200 stages. The ability is what changes the problem.',
         ko: '네 캐릭터가 같은 200 스테이지를 걷습니다. 판이 아니라 능력이 문제를 바꿉니다.',
-        ja: '4 キャラとも同じ 200 ステージ。盤ではなく能力が問題を変えます。' },
+        ja: '4キャラとも同じ200ステージ。盤ではなく能力が問題を変えます。' },
     ],
     facts: [
       { k: { en: 'Stages', ko: '스테이지', ja: 'ステージ' },
-        v: { en: '200 — the same 200 for every character; the ability is what changes',
-             ko: '200개 — 네 캐릭터가 같은 판을 걷고, 능력만 다릅니다',
-             ja: '200 — 4 キャラとも同じ盤。違うのは能力だけ' } },
+        v: { en: '200, every one with a verified solution',
+             ko: '200개, 전부 풀이를 검증했습니다',
+             ja: '200、すべて解けることを検証済み' } },
       { k: { en: 'Ads', ko: '광고', ja: '広告' },
-        v: { en: 'Rewarded only, behind the hint key. No banners, nothing that interrupts.',
-             ko: '힌트 키 뒤의 보상형만. 배너도, 끼어드는 광고도 없습니다.',
-             ja: 'ヒントキーの後ろの報酬型のみ。バナーも割り込みもありません。' } },
+        v: { en: 'Rewarded only, for more hints, abilities or retries once the free ones are used. No banners.',
+             ko: '무료분을 다 쓴 힌트·능력·재도전을 더 쓸 때만 나오는 보상형. 배너는 없습니다.',
+             ja: '無料分を使い切ったヒント・能力・リトライを追加するときだけの報酬型。バナーはありません。' } },
       { k: { en: 'Network', ko: '인터넷', ja: 'ネット' },
-        v: { en: 'Only for the leaderboard. Fully playable offline.',
-             ko: '순위표에만 씁니다. 오프라인으로 끝까지 플레이할 수 있습니다.',
-             ja: 'ランキングだけに使用。オフラインで最後まで遊べます。' } },
+        v: { en: 'For the leaderboard and ads. Fully playable offline.',
+             ko: '랭킹과 광고에만 씁니다. 오프라인으로 끝까지 플레이할 수 있습니다.',
+             ja: 'ランキングと広告にだけ使用。オフラインで最後まで遊べます。' } },
       { k: { en: 'Languages', ko: '언어', ja: '言語' },
         v: { en: 'English / 한국어 / 日本語', ko: '한국어 / English / 日本語', ja: '日本語 / English / 한국어' } },
     ],
     android: 'https://play.google.com/store/apps/details?id=me.energypotion.es',
-    ios: null,   // iOS 는 심사 중 — STORE.md
+    ios: 'https://apps.apple.com/app/id6800201050',
   },
   {
     slug: 'prism-dash', id: 'pd', name: 'Prism Dash', accent: '#7ad8ff',
     ready: true, feature: true,
     tag:  { en: 'Area capture', ko: '영역 확보', ja: '陣取り' },
     line: {
-      en: 'Cut off a piece of the field and it is yours — along with whatever was hiding under it.',
-      ko: '영역을 잘라내면 그만큼 내 것이 되고, 그 아래 깔려 있던 그림이 드러납니다.',
-      ja: 'エリアを切り取れば自分のもの。その下に隠れていた絵が現れます。',
+      en: 'A gallery sunk in darkness. Draw a line, cut the dark away, and the painting underneath is yours.',
+      ko: '어둠에 잠긴 미술관. 선을 그어 어둠을 잘라내면 덮여 있던 명화가 드러납니다.',
+      ja: '闇に沈んだ美術館。線を引いて闇を切り取ると、隠れていた名画が現れます。',
     },
     points: [
-      { en: 'Qix-style: draw a line across open space and close it before you are hit.',
-        ko: 'Qix 계열 — 빈 공간을 가로질러 선을 긋고, 부딪히기 전에 닫습니다.',
-        ja: 'Qix 系 — 空きを横切って線を引き、当たる前に閉じる。' },
-      { en: 'A run gives you three continues, and each one is a video you chose to watch.',
-        ko: '한 판에 이어하기 세 번, 그리고 그 세 번은 전부 직접 누른 광고입니다.',
-        ja: '1 プレイにコンティニュー 3 回。どれも自分で押した広告です。' },
-      { en: 'Your score and the ground you took survive a continue — that is what it buys.',
-        ko: '이어하면 점수와 확보한 영역이 그대로 남습니다. 광고를 보는 이유가 그것입니다.',
-        ja: 'コンティニューしてもスコアと確保した領域はそのまま。それが広告を見る理由です。' },
+      { en: 'Wall off an area the monster cannot reach and the ground is yours.',
+        ko: '괴물이 닿지 않는 영역을 격리하면 내 땅이 됩니다.',
+        ja: 'モンスターの届かない領域を囲めば、自分の陣地になります。' },
+      { en: 'You are defenceless while you draw. If the monster touches the line, you die.',
+        ko: '선을 긋는 동안은 무방비입니다. 괴물이 선에 닿으면 죽습니다.',
+        ja: '線を引いている間は無防備です。モンスターが線に触れるとやられます。' },
+      { en: '48 public-domain masterpieces, and six bosses that speed up with every loop.',
+        ko: '퍼블릭 도메인 명화 48점, 그리고 루프마다 빨라지는 보스 6종.',
+        ja: 'パブリックドメインの名画48点と、周回ごとに速くなるボス6種。' },
     ],
     facts: [
-      { k: { en: 'Continues', ko: '이어하기', ja: 'コンティニュー' },
-        v: { en: 'Three per run, each one a rewarded video you press yourself',
-             ko: '한 판에 세 번, 매번 직접 누르는 보상형 광고',
-             ja: '1 プレイ 3 回、いずれも自分で押す報酬型広告' } },
+      { k: { en: 'Content', ko: '분량', ja: 'ボリューム' },
+        v: { en: '48 paintings, six bosses', ko: '명화 48점, 보스 6종', ja: '名画48点、ボス6種' } },
       { k: { en: 'Ads', ko: '광고', ja: '広告' },
-        v: { en: 'Rewarded only. Decline and the run simply ends.',
-             ko: '보상형만. 거절하면 그대로 게임이 끝날 뿐입니다.',
-             ja: '報酬型のみ。断ればそのまま終わります。' } },
+        v: { en: 'Two rewarded ones, both optional: continue after game over, and re-spin the bonus.',
+             ko: '원할 때만 보는 보상형 두 가지: 게임 오버 후 이어하기와 보너스 다시 돌리기.',
+             ja: '見たいときだけの報酬型2種: ゲームオーバー後のコンティニューとボーナスの回し直し。' } },
+      { k: { en: 'Languages', ko: '언어', ja: '言語' },
+        v: { en: 'English / 한국어 / 日本語', ko: '한국어 / English / 日本語', ja: '日本語 / English / 한국어' } },
     ],
     android: 'https://play.google.com/store/apps/details?id=me.energypotion.pd',
-    ios: null,   // iOS 는 번들 ID 조회로 안 잡힘 — 콘솔에서 확인
+    ios: 'https://apps.apple.com/app/id6804239811',
   },
   {
     slug: 'skydiver', id: 'sd', name: 'Skydiver', accent: '#6fb7e8',
@@ -181,28 +161,30 @@ const APPS = [
     line: {
       en: 'Take off, jump, and fall as far as you can down the canyon.',
       ko: '경비행기에서 뛰어내려, 협곡 아래로 갈 수 있는 데까지 떨어집니다.',
-      ja: '軽飛行機から飛び降り、峡谷をどこまでも落ちていく。',
+      ja: '軽飛行機から飛び降り、峡谷をどこまでも落ちていきます。',
     },
     points: [
-      { en: 'Hold to spread and steer, release to dive, double tap for a flare.',
-        ko: '누르면 펼쳐 조종하고, 떼면 급강하하고, 두 번 두드리면 플레어를 던집니다.',
-        ja: '押して滑空、離して急降下、ダブルタップでフレア。' },
+      { en: 'Hold to spread and steer, release to fold up and dive, double tap for a flare.',
+        ko: '누르면 팔을 펼쳐 조종하고, 떼면 몸을 접어 내리꽂고, 두 번 누르면 조명탄을 던집니다.',
+        ja: '押して腕を広げて操作、離して急降下、ダブルタップで照明弾。' },
       { en: 'Distance is the score. Five health pips are the clock.',
         ko: '거리가 점수입니다. 체력 다섯 칸이 시계 역할을 합니다.',
-        ja: '距離がスコア。体力 5 つが時計の代わりです。' },
-      { en: 'Every piece of art in it was drawn for it.',
-        ko: '들어간 그림은 전부 이 게임을 위해 그린 것입니다.',
-        ja: '使われている絵はすべてこのゲームのために描いたものです。' },
+        ja: '距離がスコア。体力5つが時計の代わりです。' },
+      { en: 'Portrait, one hand. No account, no sign-up.',
+        ko: '세로 화면, 한 손 조종. 계정도 가입도 없습니다.',
+        ja: '縦画面、片手で操作。アカウントも登録も不要です。' },
     ],
     facts: [
       { k: { en: 'Scoring', ko: '점수', ja: 'スコア' },
         v: { en: 'Distance fallen; five health pips instead of a timer',
              ko: '떨어진 거리. 타이머 대신 체력 다섯 칸',
-             ja: '落下距離。タイマーではなく体力 5 つ' } },
+             ja: '落下距離。タイマーではなく体力5つ' } },
       { k: { en: 'Ads', ko: '광고', ja: '広告' },
-        v: { en: 'Rewarded only, and only when you ask for one.',
-             ko: '보상형만, 그것도 직접 요청할 때만.',
-             ja: '報酬型のみ。自分で求めたときだけ。' } },
+        v: { en: 'Rewarded only. Jumps refill with time, and an ad tops them up if you do not want to wait.',
+             ko: '보상형만. 점프는 시간이 지나면 다시 차고, 기다리기 싫으면 광고로 채울 수 있습니다.',
+             ja: '報酬型のみ。ジャンプは時間で回復し、待ちたくなければ広告で補充できます。' } },
+      { k: { en: 'Languages', ko: '언어', ja: '言語' },
+        v: { en: 'English / 한국어 / 日本語', ko: '한국어 / English / 日本語', ja: '日本語 / English / 한국어' } },
     ],
     android: 'https://play.google.com/store/apps/details?id=me.energypotion.sd',
     ios: 'https://apps.apple.com/app/id6800593167',
@@ -210,31 +192,30 @@ const APPS = [
   {
     slug: 'invader-z', id: 'iz', name: 'Invader Z', accent: '#8ef07a',
     ready: true, feature: true,
-    // Rewritten 2026-09-06 against the store listing and its screenshots. What
-    // stood here was invented from class names — Balloon, Boss, FireButton —
-    // and described a formation shooter. It is a bow.
     tag:  { en: 'Zombie arcade', ko: '좀비 아케이드', ja: 'ゾンビアーケード' },
     line: {
-      en: 'Pick up the bow. The zombies are already walking towards the house.',
-      ko: '활을 듭니다. 좀비는 이미 집 쪽으로 걸어오고 있습니다.',
-      ja: '弓を取る。ゾンビはもう家に向かって歩いてきている。',
+      en: 'Pick up the bow. The zombies are already coming for the house.',
+      ko: '활을 듭니다. 좀비들이 이미 집으로 몰려오고 있습니다.',
+      ja: '弓を取る。ゾンビはもう家に向かって押し寄せています。',
     },
     points: [
-      { en: 'Aim and loose with one thumb. That is the whole control.',
-        ko: '한 손으로 겨누고 쏩니다. 조작은 그것뿐입니다.',
-        ja: '片手で狙って放つ。操作はそれだけ。' },
-      { en: 'Some of them arrive on foot. Some arrive hanging from balloons.',
+      { en: 'Some come on foot. Some drift in hanging from balloons.',
         ko: '걸어오는 놈이 있고, 풍선에 매달려 오는 놈이 있습니다.',
-        ja: '歩いてくる者もいれば、風船にぶら下がって来る者もいる。' },
-      { en: 'Bosses, bonus targets, and a score that goes on the board.',
-        ko: '보스와 보너스 타깃, 그리고 순위표에 올라가는 점수.',
-        ja: 'ボス、ボーナスターゲット、ランキングに載るスコア。' },
+        ja: '歩いてくる者もいれば、風船にぶら下がって来る者もいます。' },
+      { en: 'Then the bosses arrive, and they are a good deal bigger.',
+        ko: '그러다 훨씬 커다란 보스가 나타납니다.',
+        ja: 'やがて、ずっと大きなボスが現れます。' },
+      { en: 'Your score goes on the ranking.',
+        ko: '점수는 랭킹에 올라갑니다.',
+        ja: 'スコアはランキングに載ります。' },
     ],
     facts: [
       { k: { en: 'Ads', ko: '광고', ja: '広告' },
-        v: { en: 'Rewarded only, to continue a run you chose to continue.',
-             ko: '이어하기를 직접 고를 때만 나오는 보상형.',
-             ja: '自分でコンティニューを選んだときだけの報酬型。' } },
+        v: { en: 'Rewarded only, to continue a run. It asks first, and no is fine.',
+             ko: '이어하기를 할 때만 나오는 보상형. 먼저 물어보고, 거절해도 됩니다.',
+             ja: 'コンティニューのときだけの報酬型。先に確認があり、断れます。' } },
+      { k: { en: 'Languages', ko: '언어', ja: '言語' },
+        v: { en: 'English / 한국어 / 日本語', ko: '한국어 / English / 日本語', ja: '日本語 / English / 한국어' } },
     ],
     android: 'https://play.google.com/store/apps/details?id=me.energypotion.iz',
     ios: 'https://apps.apple.com/app/id1438003963',
@@ -244,26 +225,30 @@ const APPS = [
     ready: true, feature: true,
     tag:  { en: 'Vertical shmup', ko: '종스크롤 슈팅', ja: '縦スクロールSTG' },
     line: {
-      en: 'Drag to fly — the ship fires while you steer it, and stops the moment you let go.',
-      ko: '끌어서 움직입니다. 손을 대고 있는 동안만 쏘고, 떼면 멈춥니다.',
-      ja: 'ドラッグで移動。触れている間だけ撃ち、離せば止まります。',
+      en: 'The last fighter left, against an alien fleet that keeps on coming.',
+      ko: '홀로 남은 전투기로, 끝없이 밀려오는 외계 침략군에 맞섭니다.',
+      ja: 'ただ一機残った戦闘機で、押し寄せる異星の侵略軍に立ち向かいます。',
     },
     points: [
-      { en: 'Three weapon levels, built up from what enemies drop.',
-        ko: '적이 떨어뜨린 것을 모아 무기를 3단계까지 올립니다.',
-        ja: '敵が落とすものを集めて武器を 3 段階まで。' },
-      { en: 'Bombs clear the screen of bullets — and the cleared bullets are score.',
-        ko: '폭탄은 화면의 탄을 지우고, 지운 탄은 점수가 됩니다.',
-        ja: 'ボムは画面の弾を消し、消した弾はスコアになります。' },
-      { en: 'Die and the game eases off for a while. It is not trying to bleed you.',
-        ko: '죽으면 잠깐 난이도가 내려갑니다. 뽑아먹으려고 만든 게임이 아닙니다.',
-        ja: '死ぬとしばらく難度が下がります。搾り取るための作りではありません。' },
+      { en: 'One hand: drag to move, lift to fire the beam, double tap for a bomb.',
+        ko: '한 손 조작. 끌어서 움직이고, 손을 떼면 빔을 쏘고, 두 번 누르면 폭탄을 떨어뜨립니다.',
+        ja: '片手で操作。ドラッグで移動、指を離すとビーム、ダブルタップでボム。' },
+      { en: 'Power-ups turn a single shot into a multi-way spread.',
+        ko: '무기 파워업을 모으면 단발이 다방향 확산탄으로 바뀝니다.',
+        ja: 'パワーアップを集めると、単発が多方向の拡散弾に変わります。' },
+      { en: 'A boss at the end of every stage, and a high score to chase.',
+        ko: '스테이지 끝마다 보스전이 있고, 높은 점수에 도전할 수 있습니다.',
+        ja: 'ステージの最後には必ずボス戦。ハイスコアにも挑めます。' },
     ],
     facts: [
       { k: { en: 'Ads', ko: '광고', ja: '広告' },
-        v: { en: 'Rewarded only — watch to continue, or to refill energy between stages.',
-             ko: '보상형만 — 이어하기, 또는 스테이지 사이 에너지 충전.',
-             ja: '報酬型のみ — コンティニュー、またはステージ間のエネルギー補充。' } },
+        // Said plainly because it is the one ad in the catalogue nobody presses
+        // to start. See the hero's line in index.html, written around this.
+        v: { en: 'Rewarded only: a continue after you die, and a refill at stage clear. The refill plays by itself after a five-second countdown; NO THANKS stays on screen the whole time.',
+             ko: '보상형만: 죽은 뒤 이어하기, 스테이지 클리어 때 충전. 충전 광고는 5초 카운트다운 뒤 자동으로 재생되며, 그동안 NO THANKS로 거절할 수 있습니다.',
+             ja: '報酬型のみ: 死亡後のコンティニューと、ステージクリア時の補充。補充の広告は5秒のカウントダウン後に自動で流れ、その間ずっと NO THANKS で断れます。' } },
+      { k: { en: 'Languages', ko: '언어', ja: '言語' },
+        v: { en: 'English (per the store listing)', ko: 'English (스토어 표기 기준)', ja: 'English（ストア表記）' } },
     ],
     android: 'https://play.google.com/store/apps/details?id=me.energypotion.sf',
     ios: 'https://apps.apple.com/app/id6789585845',

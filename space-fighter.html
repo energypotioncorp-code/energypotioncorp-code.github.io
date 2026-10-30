@@ -3,20 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Space Fighter — 끌면 쏜다</title>
-<meta name="description" content="손을 대고 있는 동안만 쏘는 종스크롤 슈팅. 무료, 인앱 결제 없음.">
+<title>Space Fighter — 마지막 전투기</title>
+<meta name="description" content="홀로 남은 전투기로 외계 침략군에 맞서는 종스크롤 슈팅. 무료, 인앱 결제 없음.">
 
 <meta property="og:title" content="Space Fighter">
-<meta property="og:description" content="끌어서 움직입니다. 손을 대고 있는 동안만 쏘고, 떼면 멈춥니다.">
+<meta property="og:description" content="홀로 남은 전투기로, 끝없이 밀려오는 외계 침략군에 맞섭니다.">
 <meta property="og:image" content="https://energypotioncorp-code.github.io/assets/og/space-fighter.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://energypotioncorp-code.github.io/space-fighter.html">
 <meta name="twitter:card" content="summary_large_image">
 
+<!-- Runs before anything else on the page: the language has to be known before the
+     first paint, and the picture at the top should start downloading now rather than
+     after the stylesheet. Order matches ECHO_LANG > es.lang > handset in the game. -->
+<script>
+(function(){var L=['en','ko','ja'],p=new URLSearchParams(location.search).get('lang'),s=null,n=(navigator.language||'en').slice(0,2),l;
+try{s=localStorage.getItem('ep.lang')}catch(e){}
+l=L.indexOf(p)>=0?p:L.indexOf(s)>=0?s:L.indexOf(n)>=0?n:'en';
+document.documentElement.lang=l;window.EP_LANG=l;window.EP_HERO='assets/shots/space-fighter-en-1.jpg';
+var k=document.createElement('link');k.rel='preload';k.as='image';k.href=window.EP_HERO;k.fetchPriority='high';document.head.appendChild(k);})();
+</script>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<!-- Not render-blocking: a font on another host must never hold up the first paint. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="assets/site.css">
+<script defer src="assets/data.js"></script>
+<script defer src="assets/shots.js"></script>
+<script defer src="assets/site.js"></script>
 </head>
 
 <!-- data-app is what tells site.js which entry in data.js this page is. Copy
@@ -39,22 +55,16 @@
           Nothing between the headline and the store link. -->
   <div class="hero">
     <div class="eyebrow" data-app-tag></div>
-    <h1 data-app-name></h1>
+    <h1>Space Fighter</h1>
     <p class="lead" data-app-line></p>
     <div class="stores" data-app-stores></div>
 
-    <!-- 2 — the proof, immediately under the button. A muted, looping,
-            autoplaying clip of ~8 seconds of real play. This is the single
-            highest-value asset on the page: a community reader decides from
-            the motion, not from the sentence. Keep it under 2 MB. -->
-    <!-- The hero clip. Until there is one, the game's own first screenshot
-         stands here — an empty frame with the word TODO in it is not something
-         a visitor should ever see, and this page is what an ad pays for.
-         Swap the img for the video when the clip exists. -->
+    <!-- 2 — the proof, immediately under the button. In the HTML rather than the
+         script so it starts with the page. When there is a clip, swap the img for
+         <video autoplay muted loop playsinline>, under 2 MB. -->
     <div class="media">
-      <!-- <video src="assets/shots/space-fighter.mp4" poster="assets/shots/space-fighter-1.jpg"
-             autoplay muted loop playsinline></video> -->
-      <img src="assets/shots/space-fighter-1.jpg" alt="">
+      <img id="hero-shot" data-slug="space-fighter" width="388" height="840" alt="Space Fighter" fetchpriority="high" decoding="async">
+      <script>document.getElementById('hero-shot').src=window.EP_HERO</script>
     </div>
   </div>
 
@@ -118,7 +128,5 @@
   <div class="wrap"><div class="stores" data-app-stores-foot></div></div>
 </div>
 
-<script src="assets/data.js"></script>
-<script src="assets/site.js"></script>
 </body>
 </html>

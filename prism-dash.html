@@ -3,20 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Prism Dash — 잘라낸 만큼 내 것</title>
-<meta name="description" content="빈 공간을 가로질러 선을 긋고 영역을 확보하는 Qix 계열 아케이드. 무료, 인앱 결제 없음.">
+<title>Prism Dash — 어둠 속의 명화</title>
+<meta name="description" content="선을 그어 어둠을 잘라내면 명화가 드러나는 영역 확보 게임. 무료, 인앱 결제 없음.">
 
 <meta property="og:title" content="Prism Dash">
-<meta property="og:description" content="영역을 잘라내면 그만큼 내 것이 되고, 그 아래 깔려 있던 그림이 드러납니다.">
+<meta property="og:description" content="어둠에 잠긴 미술관. 선을 그어 어둠을 잘라내면 덮여 있던 명화가 드러납니다.">
 <meta property="og:image" content="https://energypotioncorp-code.github.io/assets/og/prism-dash.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://energypotioncorp-code.github.io/prism-dash.html">
 <meta name="twitter:card" content="summary_large_image">
 
+<!-- Runs before anything else on the page: the language has to be known before the
+     first paint, and the picture at the top should start downloading now rather than
+     after the stylesheet. Order matches ECHO_LANG > es.lang > handset in the game. -->
+<script>
+(function(){var L=['en','ko','ja'],p=new URLSearchParams(location.search).get('lang'),s=null,n=(navigator.language||'en').slice(0,2),l;
+try{s=localStorage.getItem('ep.lang')}catch(e){}
+l=L.indexOf(p)>=0?p:L.indexOf(s)>=0?s:L.indexOf(n)>=0?n:'en';
+document.documentElement.lang=l;window.EP_LANG=l;window.EP_HERO='assets/shots/prism-dash-'+l+'-1.jpg';
+var k=document.createElement('link');k.rel='preload';k.as='image';k.href=window.EP_HERO;k.fetchPriority='high';document.head.appendChild(k);})();
+</script>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<!-- Not render-blocking: a font on another host must never hold up the first paint. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet"></noscript>
 <link rel="stylesheet" href="assets/site.css">
+<script defer src="assets/data.js"></script>
+<script defer src="assets/shots.js"></script>
+<script defer src="assets/site.js"></script>
 </head>
 
 <!-- data-app is what tells site.js which entry in data.js this page is. Copy
@@ -39,22 +55,16 @@
           Nothing between the headline and the store link. -->
   <div class="hero">
     <div class="eyebrow" data-app-tag></div>
-    <h1 data-app-name></h1>
+    <h1>Prism Dash</h1>
     <p class="lead" data-app-line></p>
     <div class="stores" data-app-stores></div>
 
-    <!-- 2 — the proof, immediately under the button. A muted, looping,
-            autoplaying clip of ~8 seconds of real play. This is the single
-            highest-value asset on the page: a community reader decides from
-            the motion, not from the sentence. Keep it under 2 MB. -->
-    <!-- The hero clip. Until there is one, the game's own first screenshot
-         stands here — an empty frame with the word TODO in it is not something
-         a visitor should ever see, and this page is what an ad pays for.
-         Swap the img for the video when the clip exists. -->
+    <!-- 2 — the proof, immediately under the button. In the HTML rather than the
+         script so it starts with the page. When there is a clip, swap the img for
+         <video autoplay muted loop playsinline>, under 2 MB. -->
     <div class="media">
-      <!-- <video src="assets/shots/prism-dash.mp4" poster="assets/shots/prism-dash-1.jpg"
-             autoplay muted loop playsinline></video> -->
-      <img src="assets/shots/prism-dash-1.jpg" alt="">
+      <img id="hero-shot" data-slug="prism-dash" width="387" height="840" alt="Prism Dash" fetchpriority="high" decoding="async">
+      <script>document.getElementById('hero-shot').src=window.EP_HERO</script>
     </div>
   </div>
 
@@ -118,7 +128,5 @@
   <div class="wrap"><div class="stores" data-app-stores-foot></div></div>
 </div>
 
-<script src="assets/data.js"></script>
-<script src="assets/site.js"></script>
 </body>
 </html>

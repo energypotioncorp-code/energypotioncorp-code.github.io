@@ -30,19 +30,6 @@ const UI = {
   allGames: { en: 'All games',  ko: '게임 전체',  ja: 'ゲーム一覧' },
   more:     { en: 'More',       ko: '자세히',     ja: '詳しく' },
   alsoBy:   { en: 'Also by us', ko: '이 밖에',    ja: 'ほかにも' },
-  whyFree:  { en: 'Why free',   ko: '왜 무료인가', ja: 'なぜ無料か' },
-  whyFreeBody: {
-    en: 'One person makes these. There is no purchase to sell you, so the only '
-      + 'money here is a rewarded video — and it plays when you press it, never '
-      + 'on its own. This page carries no tracker either; a link with ?c= '
-      + 'tells us which community it came from, and nothing else.',
-    ko: '혼자 만듭니다. 팔 물건이 없으니 수익은 보상형 광고 하나뿐이고, 그것도 '
-      + '직접 눌러야 나옵니다. 이 페이지에는 추적기도 없습니다 — 링크에 붙은 '
-      + '?c= 가 어느 커뮤니티에서 왔는지 알려줄 뿐입니다.',
-    ja: 'ひとりで作っています。売るものがないので収益は報酬型広告だけで、それも'
-      + '自分で押したときにだけ流れます。このページに計測タグはありません。'
-      + 'リンクの ?c= がどのコミュニティ由来かを伝えるだけです。',
-  },
   howItWorks:{en: 'How it works', ko: '어떤 게임인가', ja: 'どんなゲームか' },
   shots:    { en: 'Screens',    ko: '화면',       ja: '画面' },
   facts:    { en: 'The details',ko: '알아둘 것',  ja: '詳細' },
@@ -51,23 +38,15 @@ const UI = {
 const LANGS = ['en', 'ko', 'ja'];
 const LANG_NAME = { en: 'English', ko: '한국어', ja: '日本語' };
 
-function pickLang() {
-  const q = new URLSearchParams(location.search).get('lang');
-  if (LANGS.includes(q)) return q;
-  try {
-    const saved = localStorage.getItem('ep.lang');
-    if (LANGS.includes(saved)) return saved;
-  } catch (e) { /* private mode: fall through */ }
-  const nav = (navigator.language || 'en').slice(0, 2);
-  return LANGS.includes(nav) ? nav : 'en';
-}
-
-let LANG = pickLang();
+// Chosen by the inline script in each page's head, before the first paint.
+let LANG = window.EP_LANG || 'en';
 
 function setLang(l) {
   LANG = l;
   try { localStorage.setItem('ep.lang', l); } catch (e) {}
-  document.documentElement.lang = l;
+  document.documentElement.lang = l;   // CSS swaps the hero's words from this
+  const hero = document.getElementById('hero-shot');
+  if (hero) hero.src = shotSrc(hero.dataset.slug, 1);
   render();
 }
 
@@ -123,17 +102,44 @@ function storeButtons(app, size) {
 
 /* --- rendering ----------------------------------------------------------- */
 
-function iconOf(app, kind) {
-  // The asset if it is there, a coloured tile with the initials if it is not —
-  // so a missing file never renders as a broken image. `kind` is 'icon' for the
-  // app icon and 'shot' for the first screenshot; the small entries at the foot
-  // of the page use the screenshot, because a list of games with no game in it
-  // is a list of names.
-  const src = kind === 'shot' ? `assets/shots/${app.slug}-1.jpg`
-                              : `assets/icons/${app.slug}.png`;
+// The language's own screenshots where the store has them, English otherwise.
+function shotSrc(slug, n) {
+  const langs = SHOTS[slug].langs;
+  return `assets/shots/${slug}-${langs.includes(LANG) ? LANG : langs[0]}-${n}.jpg`;
+}
+
+// Top first. Nothing below the hero starts downloading until the hero has arrived, or
+// 2.5 s have gone by on a connection that is taking too long about it.
+const heroArrived = new Promise((ok) => {
+  const hero = document.getElementById('hero-shot');
+  if (!hero || hero.complete) return ok();
+  hero.addEventListener('load', ok, { once: true });
+  hero.addEventListener('error', ok, { once: true });
+  setTimeout(ok, 2500);
+});
+
+function wakeImages() {
+  heroArrived.then(() => document.querySelectorAll('img[data-src]').forEach((img) => {
+    img.src = img.dataset.src;
+    img.removeAttribute('data-src');
+  }));
+}
+
+// Everything below the first screen goes through here. width and height reserve the
+// picture's room before it arrives, so nothing the reader is looking at moves; lazy
+// leaves it unrequested until they scroll near it.
+function shotImg(slug, n, alt) {
+  const [w, h] = SHOTS[slug].dims[n - 1];
+  return `<img data-src="${shotSrc(slug, n)}" width="${w}" height="${h}" alt="${alt || ''}"`
+       + ` loading="lazy" decoding="async"${w > h ? ' class="wide"' : ''}>`;
+}
+
+function iconOf(app) {
+  // A coloured tile with the initials sits under the icon, so a missing file never
+  // renders as a broken image.
   const initials = app.name.split(' ').map((w) => w[0]).join('').slice(0, 2);
   return `<span class="icon" style="--accent:${app.accent}">
-            <img src="${src}" alt="" loading="lazy" onerror="this.remove()">
+            <img data-src="assets/icons/${app.slug}.jpg" width="112" height="112" alt="" decoding="async" onerror="this.remove()">
             <b>${initials}</b>
           </span>`;
 }
@@ -144,18 +150,11 @@ function iconOf(app, kind) {
    the foot of the page. */
 function renderBlock(app) {
   const points = (app.points || []).slice(0, 2).map((p) => `<li>${t(p)}</li>`).join('');
-  // jpg, not png: these are screenshots of rendered scenes, and the same
-  // frame is 160 KB here against 700 KB as a PNG. Six blocks of that is the
-  // whole page's weight, on a page somebody is paying per click to send
-  // people to.
-  const shot  = `assets/shots/${app.slug}-1.jpg`;
-  const shot2 = `assets/shots/${app.slug}-2.jpg`;   // optional; removed if absent
+  const pics = SHOTS[app.slug].block.filter((n) => SHOTS[app.slug].dims[n - 1])
+    .map((n, i) => shotImg(app.slug, n, i ? '' : app.name)).join('');
   return `
     <article class="app" id="${app.slug}" style="--accent:${app.accent}">
-      <div class="app-media">
-        <img src="${shot}" alt="${app.name}" loading="lazy" onerror="shotMissing(this)" onload="fitShot(this)">
-        <img src="${shot2}" alt="" loading="lazy" onerror="this.remove()" onload="fitShot(this)">
-      </div>
+      <div class="app-media">${pics}</div>
       <div class="app-body">
         <div class="eyebrow">${t(app.tag)}</div>
         <h3>${app.name}</h3>
@@ -167,50 +166,8 @@ function renderBlock(app) {
     </article>`;
 }
 
-// Named so the inline onerror above has something to call; the hiding itself
-// is done by the timeout, since onerror fires before the last image has tried.
-function shotsLeft() {}
-
-// Landscape or portrait is a property of the game, not of the page: Catch
-// Catch is played sideways and Echo Step is not. The frame follows the file.
-function fitShot(img) {
-  if (img.naturalWidth > img.naturalHeight) img.classList.add('wide');
-}
-
-function shotMissing(img) {
-  const box = document.createElement('div');
-  box.className = 'placeholder';
-  box.textContent = img.getAttribute('src');
-  img.replaceWith(box);
-}
-
-// The hero's one picture. Which game it is depends on which shot exists —
-// each candidate is tried in turn and a miss moves to the next, so the slot is
-// never an empty frame and never has to be edited when a screenshot lands.
-function fillHeroShot(list) {
-  const box = document.querySelector('[data-hero-shot]');
-  if (!box) return;
-  const queue = list.slice();
-  const tryNext = () => {
-    const app = queue.shift();
-    if (!app) { box.remove(); return; }
-    const img = new Image();
-    img.onload = () => {
-      box.innerHTML = '';
-      img.alt = app.name;
-      fitShot(img);
-      box.classList.toggle('wide', img.classList.contains('wide'));
-      box.appendChild(img);
-    };
-    img.onerror = tryNext;
-    img.src = `assets/shots/${app.slug}-1.jpg`;
-  };
-  tryNext();
-}
-
 function renderCatalogue(el) {
   const featured = APPS.filter((a) => a.feature);
-  fillHeroShot(featured);
   el.innerHTML = featured.map(renderBlock).join('');
 
   const rest = APPS.filter((a) => !a.feature);
@@ -233,7 +190,7 @@ function renderCatalogue(el) {
     const out = app.ios || app.android;
     return `
     <a href="#${app.slug}" style="--accent:${app.accent}">
-      ${iconOf(app, 'icon')}
+      ${iconOf(app)}
       <span><b>${app.name}</b><i>${out ? t(app.tag) : ui('soon')}</i></span>
     </a>`;
   }).join('');
@@ -243,7 +200,7 @@ function renderGrid(el, list) {
   el.innerHTML = (list || APPS).map((app) => `
     <a class="card" href="${app.slug}.html${REF ? '?c=' + encodeURIComponent(REF) : ''}"
        style="--accent:${app.accent}">
-      ${iconOf(app, 'shot')}
+      ${iconOf(app)}
       <span class="card-text">
         <b>${app.name}</b>
         <i>${t(app.tag)}</i>
@@ -261,7 +218,6 @@ function renderApp(slug) {
   // times — hero, foot and the sticky bar — and only the first was filled.
   const set = (sel, html) => document.querySelectorAll(sel).forEach((n) => { n.innerHTML = html; });
 
-  set('[data-app-name]', app.name);
   set('[data-app-tag]',  t(app.tag));
   set('[data-app-line]', t(app.line));
   set('[data-app-stores]', storeButtons(app, 'lg'));
@@ -293,17 +249,12 @@ function renderApp(slug) {
     ? [COMMON_TOP, ...app.facts, COMMON_END] : [];
   const facts = rows.map((row) =>
     `<tr><td>${t(row.k)}</td><td>${t(row.v)}</td></tr>`).join('');
-  // The screens strip. Four slots, each removed if its file is not there —
-  // so a game with two screenshots shows two, and a game with none loses the
-  // section instead of showing four empty frames with a heading over them.
+  // The screens strip: everything the game has but the picture already at the top.
   const shotsBox = document.querySelector('[data-app-shots]');
   if (shotsBox) {
-    shotsBox.innerHTML = [1, 2, 3, 4].map((i) =>
-      `<img src="assets/shots/${app.slug}-s${i}.jpg" alt="" loading="lazy"
-            onerror="this.remove();shotsLeft(this)">`).join('');
-    // A section that ends up empty hides itself; done on the next frame,
-    // after every onerror has had its say.
-    setTimeout(() => { shotsBox.closest('section').hidden = !shotsBox.children.length; }, 0);
+    const n = SHOTS[app.slug].dims.length;
+    shotsBox.innerHTML = Array.from({ length: n - 1 }, (_, i) => shotImg(app.slug, i + 2)).join('');
+    shotsBox.closest('section').hidden = n < 2;
   }
 
   const factsBox = document.querySelector('[data-app-facts]');
@@ -319,15 +270,6 @@ function renderApp(slug) {
 
 function renderChrome() {
   document.querySelectorAll('[data-ui]').forEach((n) => { n.textContent = ui(n.dataset.ui); });
-  document.querySelectorAll('[data-studio-line]').forEach((n) => { n.textContent = t(STUDIO.line); });
-  // The headline was English in the markup while the sentence under it was
-  // translated, so switching to 한국어 half-translated the hero. It comes from
-  // the same place as everything else now; \n in the string is the line break.
-  document.querySelectorAll('[data-studio-head]').forEach((n) => {
-    n.innerHTML = t(STUDIO.head).split('\n')
-      .map((s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])))
-      .join('<br>');
-  });
   const sw = document.querySelector('[data-lang]');
   if (sw) sw.innerHTML = LANGS.map((l) =>
     `<button type="button" class="${l === LANG ? 'on' : ''}" onclick="setLang('${l}')">${LANG_NAME[l]}</button>`
@@ -344,10 +286,10 @@ function render() {
   if (grid) renderGrid(grid);
   const page = document.body.dataset.app;
   if (page) renderApp(page);
+  wakeImages();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.documentElement.lang = LANG;
   render();
   // Sticky CTA appears once the hero's own buttons have scrolled away.
   const hero = document.querySelector('[data-app-stores]');
