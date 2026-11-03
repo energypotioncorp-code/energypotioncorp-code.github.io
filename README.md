@@ -13,7 +13,7 @@
 
 바탕이 Echo Step 의 하늘색이었습니다 — 이 페이지가 그 게임의 랜딩으로 시작했기
 때문입니다. 카탈로그가 된 지금 그건 **한 게임의 페이지에 다섯이 얹혀 있는**
-모양이고, 청록이 Catch Catch 의 노랑과 Space Fighter 의 주황과 싸웁니다.
+모양이고, 청록이 CatchCatch 의 노랑과 Space Fighter 의 주황과 싸웁니다.
 
 Gemini 와 ChatGPT 에 같은 질문을 각각 던졌고 둘 다 중립 다크를 골랐습니다.
 근거도 같습니다: 스튜디오 카탈로그는 배경의 존재감을 지워야 각 게임의 고유색이
@@ -27,7 +27,7 @@ Gemini 와 ChatGPT 에 같은 질문을 각각 던졌고 둘 다 중립 다크�
 
 ## 언제 공유를 시작하는가
 
-**Catch Catch 가 두 스토어에 올라간 뒤입니다** — App Store 2026-10-31, Google Play
+**CatchCatch 가 두 스토어에 올라간 뒤입니다** — App Store 2026-10-31, Google Play
 2026-11-03. 이제 큰 블록 여섯 개의 버튼이 전부 살아 있습니다. 버튼은 기기에 맞는
 스토어 것만 보이고, 데스크톱에서는 둘 다 보입니다.
 
@@ -37,7 +37,7 @@ Gemini 와 ChatGPT 에 같은 질문을 각각 던졌고 둘 다 중립 다크�
 "페이지가 완성되면" 이 아니라 **"큰 블록 여섯 개의 버튼이 전부 살아 있으면"**
 입니다.
 
-지금 큰 블록은 **Catch Catch · Echo Step · Prism Dash · Skydiver ·
+지금 큰 블록은 **CatchCatch · Echo Step · Prism Dash · Skydiver ·
 Invader Z · Space Fighter** 여섯 개입니다. 이 구성과 순서는 `data.js` 배열이
 전부입니다.
 
@@ -122,11 +122,11 @@ Invader Z · Space Fighter** 여섯 개입니다. 이 구성과 순서는 `data.
 ## 스크린샷과 스토어 정보
 
 * **스크린샷을 바꾸려면** `/usr/bin/python3 tools/make_shots.py` 후
-  `/usr/bin/python3 tools/make_og.py`. Catch Catch 는 ProjectH 의
+  `/usr/bin/python3 tools/make_og.py`. CatchCatch 는 ProjectH 의
   `store/screenshots` 에서, 나머지는 Apple 공개 조회 API 에서 언어별로 받습니다.
-* **Catch Catch 첫 이미지는 플레이 화면**(`01_game_landscape`)입니다.
+* **CatchCatch 첫 이미지는 플레이 화면**(`01_game_landscape`)입니다.
 * **게임 소개는 스토어 설명과 코드에서 옮깁니다.** 기억으로 쓴 문장 세 개가 거짓
-  이었습니다: Catch Catch 에 시계가 없다, Invader Z 는 편대 슈팅이다, Space Fighter
+  이었습니다: CatchCatch 에 시계가 없다, Invader Z 는 편대 슈팅이다, Space Fighter
   는 누르는 동안 쏜다.
 * **히어로의 주장은 여섯 게임 전부에 참이어야 합니다.** "인앱 결제 0원" 과 "보상형뿐,
   배너도 거절할 수 없는 광고도 없음". "직접 누를 때만 나온다" 라고 쓰면 거짓입니다 —

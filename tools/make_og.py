@@ -24,7 +24,7 @@ BG, INK, DIM = (17, 20, 23), (240, 243, 244), (153, 162, 168)
 W, H = 1200, 630
 
 def first_shot(slug):
-    # Catch Catch's first is landscape and would be cropped; its second is the same
+    # CatchCatch's first is landscape and would be cropped; its second is the same
     # screen, standing up.
     if slug == 'catch-catch':
         return SHOTS / 'catch-catch-ko-2.jpg'

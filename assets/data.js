@@ -21,7 +21,7 @@
 
    What a game says about itself comes from its store listing and its own code.
    Three sentences written here from memory turned out to be false — no clock in
-   Catch Catch, a formation shooter in Invader Z, fire-while-held in Space Fighter.
+   CatchCatch, a formation shooter in Invader Z, fire-while-held in Space Fighter.
 --------------------------------------------------------------------------- */
 
 const STUDIO = {
@@ -36,7 +36,7 @@ const STUDIO = {
 const APPS = [
   {
     // Live on the App Store since 2026-10-31 and on Google Play since 2026-11-03.
-    slug: 'catch-catch', id: 'cc', name: 'Catch Catch', accent: '#ffd45c',
+    slug: 'catch-catch', id: 'cc', name: 'CatchCatch', accent: '#ffd45c',
     ready: true, feature: true,
     tag:  { en: 'Spot the difference', ko: '틀린 그림 찾기', ja: '間違い探し' },
     line: {

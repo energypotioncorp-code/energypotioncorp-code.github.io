@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Every screenshot and icon on the site, from what the stores actually carry.
 
-Catch Catch is not out yet, so it comes from ProjectH/store/screenshots — LISTING.md
+CatchCatch is not out yet, so it comes from ProjectH/store/screenshots — LISTING.md
 there records that those files match App Store Connect by MD5. The others come from
 Apple's public lookup, per storefront, so a page in Japanese shows the Japanese
 listing rather than whatever was on disk.
@@ -22,7 +22,7 @@ LANGS = {'ko': 'kr', 'ja': 'jp', 'en': 'us'}
 
 # pick: store order, 1-based. Space Fighter's first two are its opening crawl —
 # black at thumbnail size. block: which two stand in the game's block on the first
-# page; Catch Catch's first is the hero directly above it, so it starts one later.
+# page; CatchCatch's first is the hero directly above it, so it starts one later.
 GAMES = {
     'catch-catch':   {'block': [2, 3]},
     'echo-step':     {'id': 6800201050},
