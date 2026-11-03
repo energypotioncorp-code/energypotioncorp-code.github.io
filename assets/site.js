@@ -77,18 +77,19 @@ function storeUrl(app, platform) {
   return u.toString();
 }
 
-/* iOS first on an iPhone, Play first on Android, alphabetical on a desktop.
-   The reader should not have to find their own platform in a row of two. */
-function platformOrder() {
+/* Only the shop this device can install from: a Play button on an iPhone is a
+   button that takes the reader somewhere they cannot use. A desktop reader has
+   no shop of their own, so they get both. iPadOS Safari calls itself a Mac and
+   only its touch points give it away. */
+function platforms() {
   const ua = navigator.userAgent;
-  if (/iPhone|iPad|iPod/.test(ua)) return ['ios', 'android'];
-  if (/Android/.test(ua))          return ['android', 'ios'];
+  if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return ['ios'];
+  if (/Android/.test(ua)) return ['android'];
   return ['ios', 'android'];
 }
 
 function storeButtons(app, size) {
-  const order = platformOrder();
-  return order.map((p) => {
+  return platforms().map((p) => {
     const href = storeUrl(app, p);
     const shop = p === 'ios' ? ui('appStore') : ui('play');
     const cls = 'store ' + p + (size === 'lg' ? ' store-lg' : '') + (href ? '' : ' store-off');
@@ -187,7 +188,7 @@ function renderCatalogue(el) {
   // fourth block, likes it and finds a dead button has been spent for nothing;
   // saying so in the list costs one word and is the honest order to say it in.
   if (sum) sum.innerHTML = featured.map((app) => {
-    const out = app.ios || app.android;
+    const out = platforms().some((p) => app[p]);
     return `
     <a href="#${app.slug}" style="--accent:${app.accent}">
       ${iconOf(app)}

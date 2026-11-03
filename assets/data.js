@@ -35,10 +35,7 @@ const STUDIO = {
 
 const APPS = [
   {
-    // The one the page is waiting for: nothing is shared until this is live.
-    // App Store Connect id 6804225701, so ios becomes
-    // 'https://apps.apple.com/app/id6804225701' the day it is approved.
-    // Play has nothing uploaded yet.
+    // Live on the App Store since 2026-10-31 and on Google Play since 2026-11-03.
     slug: 'catch-catch', id: 'cc', name: 'Catch Catch', accent: '#ffd45c',
     ready: true, feature: true,
     tag:  { en: 'Spot the difference', ko: '틀린 그림 찾기', ja: '間違い探し' },
@@ -80,7 +77,8 @@ const APPS = [
       { k: { en: 'Languages', ko: '언어', ja: '言語' },
         v: { en: 'English / 한국어 / 日本語', ko: '한국어 / English / 日本語', ja: '日本語 / English / 한국어' } },
     ],
-    android: null, ios: null,
+    android: 'https://play.google.com/store/apps/details?id=me.energypotion.cc',
+    ios: 'https://apps.apple.com/app/id6804225701',
   },
   {
     slug: 'echo-step', id: 'es', name: 'Echo Step', accent: '#7ad0aa',
