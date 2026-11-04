@@ -21,6 +21,7 @@
   --accent:#cfd6da;      /* the default is NOT a colour: chrome stays grey and
                             every real accent arrives inline, per game */
   --on-accent:#10141b;   /* type on a filled accent button */
+  --mark:#cfd6da;        /* the logo's second word: the studio's, never a game's */
   --card:#ffffff08;
   --font:'Montserrat',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',
          'Hiragino Sans','Noto Sans KR','Noto Sans JP',sans-serif;
@@ -48,7 +49,7 @@ header.top{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
 .top .wrap{display:flex;align-items:center;gap:16px;height:56px}
 .mark,.top nav a,[data-lang] button{white-space:nowrap}
 .mark{font-weight:800;letter-spacing:.14em;font-size:13px;text-transform:uppercase}
-.mark span{color:var(--accent)}
+.mark span{color:var(--mark)}
 .top nav{margin-left:auto;display:flex;gap:14px;font-size:13px;color:var(--ink-dim)}
 [data-lang]{display:flex;gap:2px;margin-left:8px}
 [data-lang] button{background:none;border:0;color:var(--ink-dim);font:inherit;font-size:12px;
@@ -82,7 +83,10 @@ header.top{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
    picture from being pushed down when they land. */
 .hero .eyebrow:empty{min-height:1.6em}
 .hero:not(.hero-studio) .lead{min-height:3.3em}
-.hero [data-app-stores]{min-height:76px}
+/* A game page's own rows shrink to their buttons, the way a catalogue block's do
+   (.app-body centres its children), so the button is one size everywhere. */
+[data-app-stores],section > [data-app-stores-foot]{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto}
+.hero [data-app-stores]{min-height:64px}
 /* Until the script fills the blocks, keep what follows them off the first screen, or
    the footer shows and is then shoved down. */
 [data-catalogue]:empty{min-height:100vh}

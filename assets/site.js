@@ -221,8 +221,11 @@ function renderApp(slug) {
 
   set('[data-app-tag]',  t(app.tag));
   set('[data-app-line]', t(app.line));
-  set('[data-app-stores]', storeButtons(app, 'lg'));
-  set('[data-app-stores-foot]', storeButtons(app, 'lg'));
+  // The hero and foot rows are the catalogue's size, so a button is the same
+  // button on every page. Only the sticky bar spans the width.
+  set('[data-app-stores]', storeButtons(app));
+  set('section [data-app-stores-foot]', storeButtons(app));
+  set('.sticky [data-app-stores-foot]', storeButtons(app, 'lg'));
   set('[data-app-points]', (app.points || []).map((p) => `<li>${t(p)}</li>`).join(''));
 
   // The details table comes from data.js as well. It was written into each
