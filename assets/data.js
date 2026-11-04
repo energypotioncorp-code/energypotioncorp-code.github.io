@@ -45,9 +45,9 @@ const APPS = [
       ja: '同じ絵のはずが、よく見るとしげみの陰にクマがいます。',
     },
     points: [
-      { en: '30 theme packs, 150 pictures, five differences in each. Find them before time runs out.',
-        ko: '테마 팩 30개, 그림 150장, 그림마다 차이 5개. 시간이 끝나기 전에 찾으세요.',
-        ja: 'テーマパック30種、絵150枚、1枚に違いが5つ。時間切れの前に見つけましょう。' },
+      { en: '30 theme packs, 150 pictures, five differences in each. More themes keep arriving in updates.',
+        ko: '테마 팩 30개, 그림 150장, 그림마다 차이 5개. 새 테마는 업데이트로 계속 늘어납니다.',
+        ja: 'テーマパック30種、絵150枚、1枚に違いが5つ。新しいテーマはアップデートで増え続けます。' },
       { en: 'Stuck? The pencil finds one, the magnifier marks two, the clock adds ten seconds.',
         ko: '막히면 연필이 하나를 찾아 주고, 돋보기가 둘을 표시하고, 시계가 10초를 더해 줍니다.',
         ja: '困ったら、えんぴつが1つ見つけ、虫めがねが2つ示し、時計が10秒足してくれます。' },
@@ -57,7 +57,7 @@ const APPS = [
     ],
     facts: [
       { k: { en: 'Content', ko: '분량', ja: 'ボリューム' },
-        v: { en: '30 packs, 150 pictures', ko: '30개 팩, 그림 150장', ja: '30パック・絵150枚' } },
+        v: { en: '30 packs, 150 pictures, with more on the way', ko: '30개 팩, 그림 150장. 계속 추가됩니다', ja: '30パック・絵150枚。今後も追加予定' } },
       { k: { en: 'A round', ko: '한 판', ja: '1プレイ' },
         v: { en: 'Up to five pictures on one timer of 60 seconds at most',
              ko: '그림 최대 5장, 타이머 하나로 최대 60초',
