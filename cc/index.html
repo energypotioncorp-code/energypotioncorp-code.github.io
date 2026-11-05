@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CATCHCATCH</title>
+<style>
+  html,body{height:100%;margin:0;background:#1b2433;color:#eef3f8;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    display:flex;align-items:center;justify-content:center;text-align:center}
+  .box{padding:24px}
+  h1{font-size:1.4rem;margin:0 0 8px}
+  p{opacity:.8;margin:0 0 20px}
+  a.btn{display:inline-block;margin:6px;padding:12px 20px;border-radius:10px;
+    background:#e8b84a;color:#1b2433;text-decoration:none;font-weight:700}
+  a.btn.alt{background:#eef3f8;color:#1b2433}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>CATCHCATCH 🔍</h1>
+  <p>Redirecting you to the store…</p>
+  <div id="fallback" style="display:none">
+    <a class="btn" id="androidLink">Google Play</a>
+    <a class="btn alt" id="iosLink">App Store</a>
+  </div>
+</div>
+<script>
+(function () {
+  // ---- CONFIG ---------------------------------------------------------------
+  var PLAY_ID = "me.energypotion.cc";
+  var APPSTORE_URL = "https://apps.apple.com/app/id6804225701"; // region-neutral (auto-redirects to viewer's country store)
+
+  // Campaign tag comes from ?c=... on the link you paste in each post.
+  var params = new URLSearchParams(location.search);
+  var campaign = params.get("c") || "direct";
+
+  // Play Store install-referrer (shows up in Play Console > Acquisition).
+  //
+  // Source and medium follow the campaign. Add a row here for each new channel;
+  // anything unmapped falls back to the campaign name with medium=social.
+  var CHANNELS = {
+    tiktok:         { source: "tiktok",    medium: "social" },
+    youtube_shorts: { source: "youtube",   medium: "shorts" },
+    youtube_long:   { source: "youtube",   medium: "video" },
+    instagram:      { source: "instagram", medium: "social" },
+    x:              { source: "x",         medium: "social" }
+  };
+  var ch = CHANNELS[campaign] || { source: campaign, medium: "social" };
+
+  var referrer = encodeURIComponent(
+    "utm_source=" + ch.source + "&utm_medium=" + ch.medium + "&utm_campaign=" + campaign
+  );
+  var playUrl = "https://play.google.com/store/apps/details?id=" + PLAY_ID +
+                "&referrer=" + referrer;
+
+  var ua = navigator.userAgent || navigator.vendor || "";
+  var isAndroid = /android/i.test(ua);
+  var isIOS = /iPad|iPhone|iPod/i.test(ua) ||
+              (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+  document.getElementById("androidLink").href = playUrl;
+  document.getElementById("iosLink").href = APPSTORE_URL;
+
+  if (isAndroid) {
+    location.replace(playUrl);
+  } else if (isIOS && APPSTORE_URL.indexOf("http") === 0) {
+    location.replace(APPSTORE_URL);
+  } else {
+    // Desktop / unknown: show both buttons instead of guessing.
+    document.getElementById("fallback").style.display = "block";
+    document.querySelector("p").textContent = "Choose your store:";
+  }
+})();
+</script>
+</body>
+</html>
