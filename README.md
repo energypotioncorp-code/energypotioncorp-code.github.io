@@ -8,6 +8,7 @@
 | `tools/make_shots.py` | 스크린샷·아이콘·`assets/shots.js` 를 스토어 기준으로 다시 만듭니다 |
 | `tools/make_og.py` | 링크 카드 일곱 장을 다시 만듭니다 |
 | `app-ads.txt` | AdMob 이 가져가는 파일. **지우지 말 것** — 아래 참고 |
+| `cc/update.json` | CatchCatch 앱이 읽는 권장·강제 업데이트 설정. **지우거나 값을 함부로 올리지 말 것** — 규칙은 ProjectH `docs/HANDOFF.md` §업데이트 확인 값 운영 |
 
 ## 배경은 중립이고, 색은 게임의 것입니다
 
