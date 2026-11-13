@@ -1,4 +1,5 @@
 {
+  "balance": { "item_ad_per_run": 2 },
   "ios":     { "min_build": 0, "latest_build": 6, "latest_version": "1.0.3" },
   "android": { "min_build": 0, "latest_build": 6, "latest_version": "1.0.3" }
 }
