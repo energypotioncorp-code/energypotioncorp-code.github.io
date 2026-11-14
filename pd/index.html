@@ -59,17 +59,35 @@
   var isIOS = /iPad|iPhone|iPod/i.test(ua) ||
               (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-  document.getElementById("androidLink").href = playUrl;
+  // Android: open the Play Store APP, not its web page. In-app browsers (X,
+  // Instagram, ...) load a scripted redirect to play.google.com as a web page,
+  // and that page asks the visitor to sign in to Google before installing.
+  // An intent:// URL hands the link to the Play Store app; browser_fallback_url
+  // is where Chrome goes if the app cannot take it. The referrer rides along.
+  var playIntent = "intent://details?id=" + PLAY_ID + "&referrer=" + referrer +
+                   "#Intent;scheme=market;package=com.android.vending;" +
+                   "S.browser_fallback_url=" + encodeURIComponent(playUrl) + ";end";
+
+  document.getElementById("androidLink").href = isAndroid ? playIntent : playUrl;
   document.getElementById("iosLink").href = APPSTORE_URL;
 
+  function showButtons(msg) {
+    document.getElementById("fallback").style.display = "block";
+    document.querySelector("p").textContent = msg;
+  }
+
   if (isAndroid) {
-    location.replace(playUrl);
+    location.href = playIntent;
+    // Some in-app browsers drop a redirect nobody tapped for; a tap gets through.
+    setTimeout(function () {
+      document.getElementById("iosLink").style.display = "none";
+      showButtons("Tap to open the store:");
+    }, 1500);
   } else if (isIOS && APPSTORE_URL.indexOf("http") === 0) {
     location.replace(APPSTORE_URL);
   } else {
     // Desktop / unknown: show both buttons instead of guessing.
-    document.getElementById("fallback").style.display = "block";
-    document.querySelector("p").textContent = "Choose your store:";
+    showButtons("Choose your store:");
   }
 })();
 </script>
