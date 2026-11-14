@@ -68,7 +68,16 @@
                    "#Intent;scheme=market;package=com.android.vending;" +
                    "S.browser_fallback_url=" + encodeURIComponent(playUrl) + ";end";
 
-  document.getElementById("androidLink").href = isAndroid ? playIntent : playUrl;
+  // In-app browsers are WebViews, and X's hands any non-web URL straight to
+  // ACTION_VIEW without parsing it: an intent:// URL there ends in "no app can
+  // perform this action" (seen 2026-11-14, X on a Galaxy). market:// is a URL
+  // the Play Store app itself answers to, so that is what they get. Chrome keeps
+  // intent://, whose fallback covers a phone without the Play Store.
+  var inApp = /; wv\)/.test(ua) || /Twitter|FBAN|FBAV|Instagram|Line\//i.test(ua);
+  var playMarket = "market://details?id=" + PLAY_ID + "&referrer=" + referrer;
+  var playApp = inApp ? playMarket : playIntent;
+
+  document.getElementById("androidLink").href = isAndroid ? playApp : playUrl;
   document.getElementById("iosLink").href = APPSTORE_URL;
 
   function showButtons(msg) {
@@ -77,11 +86,12 @@
   }
 
   if (isAndroid) {
-    location.href = playIntent;
+    location.href = playApp;
     // Some in-app browsers drop a redirect nobody tapped for; a tap gets through.
     setTimeout(function () {
       document.getElementById("iosLink").style.display = "none";
-      showButtons("Tap to open the store:");
+      showButtons(inApp ? "Tap to open the store. Not opening? Use ⋮ → Open in browser."
+                        : "Tap to open the store:");
     }, 1500);
   } else if (isIOS && APPSTORE_URL.indexOf("http") === 0) {
     location.replace(APPSTORE_URL);
