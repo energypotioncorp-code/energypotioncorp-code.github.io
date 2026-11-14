@@ -63,18 +63,37 @@ const REF = params.get('c') || params.get('ref') || '';
 
 function storeUrl(app, platform) {
   const raw = platform === 'ios' ? app.ios : app.android;
-  if (!raw || !REF) return raw;
+  if (!raw) return raw;
   const u = new URL(raw);
-  if (platform === 'android') {
+  if (REF && platform === 'android') {
     // Play reads one opaque `referrer`, and the Install Referrer API hands it
     // back to the app. utm_source is what the console groups by.
     u.searchParams.set('referrer', 'utm_source=' + REF + '&utm_medium=community');
-  } else {
+  } else if (REF) {
     // App Store campaign token. `pt` (provider) is needed for it to show up in
     // App Analytics; fill it in once, it is the same number for every app.
     u.searchParams.set('ct', REF);
   }
-  return u.toString();
+  return platform === 'android' && ON_ANDROID ? playAppUrl(u) : u.toString();
+}
+
+/* On an Android phone the Play button has to open the Play Store APP. A plain
+   play.google.com link opens as a web page inside an in-app browser (X,
+   Instagram, ...), and that page wants a Google sign-in before it will
+   install anything (reported 2026-11-14 from X on a Galaxy). In-app browsers
+   get market://, which the Play Store answers to: X hands any non-web URL
+   straight to ACTION_VIEW, so intent:// fails there with "no app can perform
+   this action". Chrome gets intent://, whose fallback is the web page. The
+   smart links under /cc/ and /pd/ make the same choice. */
+const UA = navigator.userAgent;
+const ON_ANDROID = /Android/.test(UA);
+const IN_APP = /; wv\)/.test(UA) || /Twitter|FBAN|FBAV|Instagram|Line\//i.test(UA);
+
+function playAppUrl(u) {
+  const q = u.search;   // ?id=…[&referrer=…]
+  if (IN_APP) return 'market://details' + q;
+  return 'intent://details' + q + '#Intent;scheme=market;package=com.android.vending;'
+       + 'S.browser_fallback_url=' + encodeURIComponent(u.toString()) + ';end';
 }
 
 /* Only the shop this device can install from: a Play button on an iPhone is a
