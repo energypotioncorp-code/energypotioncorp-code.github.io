@@ -10,7 +10,7 @@
     display:flex;align-items:center;justify-content:center;text-align:center}
   .box{padding:24px}
   h1{font-size:1.4rem;margin:0 0 8px}
-  p{opacity:.8;margin:0 0 20px}
+  p{opacity:.8;margin:0 0 20px;white-space:pre-line}
   a.btn{display:inline-block;margin:6px;padding:12px 20px;border-radius:10px;
     background:#e8b84a;color:#1b2433;text-decoration:none;font-weight:700}
   a.btn.alt{background:#eef3f8;color:#1b2433}
@@ -59,6 +59,27 @@
   var isIOS = /iPad|iPhone|iPod/i.test(ua) ||
               (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
+  // The line above the buttons, in the phone's language (English otherwise).
+  // The buttons keep the stores' own names.
+  var MSG = {
+    en: { wait: "Redirecting you to the store…",
+          tap: "Tap to open the store:",
+          tapInApp: "Tap to open the store.\nNot opening? Use ⋮ → Open in browser.",
+          choose: "Choose your store:" },
+    ko: { wait: "스토어로 이동하는 중…",
+          tap: "눌러서 스토어를 여세요",
+          tapInApp: "눌러서 스토어를 여세요.\n열리지 않으면 ⋮ → 브라우저에서 열기",
+          choose: "스토어를 고르세요" },
+    ja: { wait: "ストアへ移動しています…",
+          tap: "タップしてストアを開いてください",
+          tapInApp: "タップしてストアを開いてください。\n開かないときは ⋮ →「ブラウザで開く」",
+          choose: "ストアを選んでください" }
+  };
+  var lang = ((navigator.languages && navigator.languages[0]) || navigator.language || "en").slice(0, 2).toLowerCase();
+  var msg = MSG[lang] || MSG.en;
+  document.documentElement.lang = MSG[lang] ? lang : "en";
+  document.querySelector("p").textContent = msg.wait;
+
   // Android: open the Play Store APP, not its web page. In-app browsers (X,
   // Instagram, ...) load a scripted redirect to play.google.com as a web page,
   // and that page asks the visitor to sign in to Google before installing.
@@ -90,14 +111,13 @@
     // Some in-app browsers drop a redirect nobody tapped for; a tap gets through.
     setTimeout(function () {
       document.getElementById("iosLink").style.display = "none";
-      showButtons(inApp ? "Tap to open the store. Not opening? Use ⋮ → Open in browser."
-                        : "Tap to open the store:");
+      showButtons(inApp ? msg.tapInApp : msg.tap);
     }, 1500);
   } else if (isIOS && APPSTORE_URL.indexOf("http") === 0) {
     location.replace(APPSTORE_URL);
   } else {
     // Desktop / unknown: show both buttons instead of guessing.
-    showButtons("Choose your store:");
+    showButtons(msg.choose);
   }
 })();
 </script>
